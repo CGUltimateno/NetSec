@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
+import * as CryptoJS from 'crypto-js'
+
+
+
+const SECRET_KEY = "aelwfhlaef";
+
 
 export default class Profile extends Component {
     constructor(props) {
@@ -26,7 +32,21 @@ export default class Profile extends Component {
         }
 
         const { currentUser } = this.state;
+        let originalFirstName = '';
+        let originalLastName = '';
+        console.log(currentUser)
+            try {
+                let bytesFirstName = CryptoJS.AES.decrypt(currentUser.FirstName, SECRET_KEY);
+                originalFirstName = bytesFirstName.toString(CryptoJS.enc.Utf8);
 
+                let bytesLastName = CryptoJS.AES.decrypt(currentUser.LastName, SECRET_KEY);
+                originalLastName = bytesLastName.toString(CryptoJS.enc.Utf8);
+
+                console.log(originalFirstName, originalLastName)
+            } catch (error) {
+                console.error("Decryption error:", error);
+                // Handle decryption error, e.g., set default values or show an error message
+            }
         return (
             <div className="container">
                 {(this.state.userReady) ?
@@ -49,12 +69,18 @@ export default class Profile extends Component {
                             <strong>Email:</strong>{" "}
                             {currentUser.email}
                         </p>
-                        <strong>Authorities:</strong>
+                        <p>
+                            <strong>Full Name:</strong>{" "}
+                            {originalFirstName} {originalLastName}
+                        </p>
+                        <p>
+                            <strong>Authorities:</strong>
+                        </p>
                         <ul>
                             {currentUser.roles &&
                                 currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
                         </ul>
-                    </div>: null}
+                    </div> : null}
             </div>
         );
     }

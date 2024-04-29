@@ -7,11 +7,16 @@ const Op = db.Sequelize.Op;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const CryptoJS = require("crypto-js");
+
+const SECRET_KEY = "aelwfhlaef";
 
 exports.signup = (req, res) => {
     // Save User to Database
     User.create({
         username: req.body.username,
+        FirstName: CryptoJS.AES.encrypt(JSON.stringify(req.body.FirstName), SECRET_KEY).toString(),
+        LastName: CryptoJS.AES.encrypt(JSON.stringify(req.body.LastName), SECRET_KEY).toString(),
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8)
     })
@@ -25,13 +30,31 @@ exports.signup = (req, res) => {
                     }
                 }).then(roles => {
                     user.setRoles(roles).then(() => {
-                        res.send({ message: "User was registered successfully!" });
+                        res.send({
+                            message: "User was registered successfully!",
+                            user: {
+                                id: user.id,
+                                username: user.username,
+                                email: user.email,
+                                FirstName: user.FirstName,
+                                LastName: user.LastName,
+                            }
+                        });
                     });
                 });
             } else {
                 // user role = 1
                 user.setRoles([1]).then(() => {
-                    res.send({ message: "User was registered successfully!" });
+                    res.send({
+                        message: "User was registered successfully!",
+                        user: {
+                            id: user.id,
+                            username: user.username,
+                            email: user.email,
+                            FirstName: user.FirstName,
+                            LastName: user.LastName,
+                        }
+                    });
                 });
             }
         })
@@ -39,6 +62,7 @@ exports.signup = (req, res) => {
             res.status(500).send({ message: err.message });
         });
 };
+
 
 exports.signin = (req, res) => {
     User.findOne({
@@ -80,6 +104,8 @@ exports.signin = (req, res) => {
                     id: user.id,
                     username: user.username,
                     email: user.email,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
                     roles: authorities,
                     accessToken: token
                 });

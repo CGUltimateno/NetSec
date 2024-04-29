@@ -95,7 +95,9 @@ export default class Register extends Component {
             AuthService.register(
                 this.state.username,
                 this.state.email,
-                this.state.password
+                this.state.password,
+                this.state.FirstName,
+                this.state.LastName
             ).then(
                 response => {
                     this.setState({
@@ -171,6 +173,30 @@ export default class Register extends Component {
                                         value={this.state.password}
                                         onChange={this.onChangePassword}
                                         validations={[required, vpassword]}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="FirstName">First Name</label>
+                                    <Input
+                                        type="text"
+                                        className="form-control"
+                                        name="FirstName"
+                                        value={this.state.FirstName}
+                                        onChange={this.onChangeFirstName}
+                                        validations={[required]}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="LastName">Last Name</label>
+                                    <Input
+                                        type="text"
+                                        className="form-control"
+                                        name="LastName"
+                                        value={this.state.LastName}
+                                        onChange={this.onChangeLastName}
+                                        validations={[required]}
                                     />
                                 </div>
 
