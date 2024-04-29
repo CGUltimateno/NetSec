@@ -26,15 +26,18 @@ class App extends Component {
 
     componentDidMount() {
         const user = AuthService.getCurrentUser();
-
+    
         if (user) {
             this.setState({
                 currentUser: user,
-                showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
                 showAdminBoard: user.roles.includes("ROLE_ADMIN"),
             });
+    
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            sessionStorage.setItem('showAdminBoard', JSON.stringify(user.roles.includes("ROLE_ADMIN")));
         }
     }
+    
 
     logOut() {
         AuthService.logout();
@@ -43,6 +46,8 @@ class App extends Component {
             showAdminBoard: false,
             currentUser: undefined,
         });
+    
+        sessionStorage.clear();
     }
 
     render() {
@@ -52,7 +57,7 @@ class App extends Component {
             <div>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <Link to={"/"} className="navbar-brand">
-                        CGUltimateno
+                        Random App
                     </Link>
                     <div className="navbar-nav mr-auto">
                         <li className="nav-item">

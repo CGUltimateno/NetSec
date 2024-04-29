@@ -3,9 +3,7 @@ const cors = require("cors");
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
+
 const db = require("./app/models");
 const Role = db.role;
 
@@ -21,7 +19,7 @@ db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
       console.error('Error while dropping tables:', err);
     });
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());
