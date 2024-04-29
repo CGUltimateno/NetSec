@@ -1,0 +1,5 @@
+{
+    "image": "mysql:5.7",
+    "forwardPorts": [3306],
+    "postCreateCommand": "apt-get update && apt-get install -y mysql-server"
+  }
