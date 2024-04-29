@@ -15,8 +15,8 @@ exports.signup = (req, res) => {
     // Save User to Database
     User.create({
         username: req.body.username,
-        FirstName: CryptoJS.AES.encrypt(JSON.stringify(req.body.FirstName), SECRET_KEY).toString(),
-        LastName: CryptoJS.AES.encrypt(JSON.stringify(req.body.LastName), SECRET_KEY).toString(),
+        FirstName: CryptoJS.AES.encrypt(req.body.FirstName, SECRET_KEY).toString(),
+        LastName: CryptoJS.AES.encrypt(req.body.LastName, SECRET_KEY).toString(),
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8)
     })
