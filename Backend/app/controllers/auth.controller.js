@@ -10,13 +10,20 @@ const bcrypt = require("bcryptjs");
 const CryptoJS = require("crypto-js");
 
 const SECRET_KEY = "aelwfhlaef";
+const SECRET_IV = CryptoJS.lib.WordArray.random(128/8).toString(CryptoJS.enc.Hex);
 
 exports.signup = (req, res) => {
+    const key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
+    const iv = CryptoJS.enc.Utf8.parse(SECRET_IV);
+
+    const encryptedFirstName = CryptoJS.AES.encrypt(req.body.FirstName, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }).toString();
+    const encryptedLastName = CryptoJS.AES.encrypt(req.body.LastName, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }).toString();
+
     // Save User to Database
     User.create({
         username: req.body.username,
-        FirstName: CryptoJS.AES.encrypt(req.body.FirstName, SECRET_KEY).toString(),
-        LastName: CryptoJS.AES.encrypt(req.body.LastName, SECRET_KEY).toString(),
+        FirstName: encryptedFirstName,
+        LastName: encryptedLastName,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8)
     })

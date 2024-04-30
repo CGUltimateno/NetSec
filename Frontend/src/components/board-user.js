@@ -7,35 +7,19 @@ export default class BoardUser extends Component {
         super(props);
 
         this.state = {
-            content: ""
+            content: "Hello, ",
+            user: JSON.parse(sessionStorage.getItem('user')) || {}
         };
     }
 
     componentDidMount() {
-        UserService.getUserBoard().then(
-            response => {
-                this.setState({
-                    content: response.data
-                });
-            },
-            error => {
-                this.setState({
-                    content:
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString()
-                });
-            }
-        );
     }
 
     render() {
         return (
             <div className="container">
                 <header className="jumbotron">
-                    <h3>{this.state.content}</h3>
+                    <h3>{this.state.content} {this.state.user.username}</h3>
                 </header>
             </div>
         );

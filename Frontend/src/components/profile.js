@@ -5,9 +5,6 @@ import * as CryptoJS from 'crypto-js'
 
 
 
-const SECRET_KEY = "YWGbHGpyfKZflZ2vy9gQn1+e2Rdqbx3aRVjsomaOum/FQA1m0KKDCyhi0sZPtrQ0";
-
-
 export default class Profile extends Component {
     constructor(props) {
         super(props);
@@ -27,14 +24,16 @@ export default class Profile extends Component {
     }
 
     decrypt = (text) => {
+        const secretKey = 'YWGbHGpyfKZflZ2vy9gQn1+e2Rdqbx3aRVjsomaOum/FQA1m0KKDCyhi0sZPtrQ0';
+        const secretIV = 'aifjaoeifjo';
+        const encMethod = 'aes-256-cbc';
 
-        const key = CryptoJS.SHA512(SECRET_KEY).toString().substring(0, 32);
-       
-    
-        const bytes = CryptoJS.AES.decrypt(text, key, { });
-        return bytes.toString(CryptoJS.enc.Utf8);
+        const key = CryptoJS.SHA512(secretKey).toString().substring(0, 32);
+        const encIv = CryptoJS.SHA512(secretIV).toString().substring(0, 16)
+
+        const decrypted = CryptoJS.AES.decrypt(text, key, { iv: encIv });
+        return decrypted.toString(CryptoJS.enc.Utf8);
     }
-
     render() {
         if (this.state.redirect) {
             return <Navigate to={this.state.redirect} />
@@ -42,10 +41,11 @@ export default class Profile extends Component {
 
 
         const { currentUser } = this.state;
+        console.log(currentUser);
         let originalFirstName = this.decrypt(currentUser.FirstName);
         let originalLastName = this.decrypt(currentUser.LastName);
-
-        
+        console.log(originalFirstName);
+        console.log(originalLastName);
         
        
         return (
