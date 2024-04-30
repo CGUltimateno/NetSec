@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 
-const secretKey = 'aelwfhlaef';
+const secretKey = 'YWGbHGpyfKZflZ2vy9gQn1+e2Rdqbx3aRVjsomaOum/FQA1m0KKDCyhi0sZPtrQ0';
 const secretIV = 'aifjaoeifjo';
 const encMethod = 'aes-256-cbc';
 

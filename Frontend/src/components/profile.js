@@ -5,7 +5,7 @@ import * as CryptoJS from 'crypto-js'
 
 
 
-const SECRET_KEY = "aelwfhlaef";
+const SECRET_KEY = "YWGbHGpyfKZflZ2vy9gQn1+e2Rdqbx3aRVjsomaOum/FQA1m0KKDCyhi0sZPtrQ0";
 
 
 export default class Profile extends Component {
@@ -15,7 +15,7 @@ export default class Profile extends Component {
         this.state = {
             redirect: null,
             userReady: false,
-            currentUser: { username: "" }
+            currentUser: { username: "", FirstName: "", LastName: ""  }
         };
     }
 
@@ -26,27 +26,28 @@ export default class Profile extends Component {
         this.setState({ currentUser: currentUser, userReady: true })
     }
 
+    decrypt = (text) => {
+
+        const key = CryptoJS.SHA512(SECRET_KEY).toString().substring(0, 32);
+       
+    
+        const bytes = CryptoJS.AES.decrypt(text, key, { });
+        return bytes.toString(CryptoJS.enc.Utf8);
+    }
+
     render() {
         if (this.state.redirect) {
             return <Navigate to={this.state.redirect} />
         }
 
+
         const { currentUser } = this.state;
-        let originalFirstName = '';
-        let originalLastName = '';
-        console.log(currentUser)
-            try {
-                let bytesFirstName = CryptoJS.AES.decrypt(currentUser.FirstName, SECRET_KEY);
-                originalFirstName = bytesFirstName.toString(CryptoJS.enc.Utf8);
+        let originalFirstName = this.decrypt(currentUser.FirstName);
+        let originalLastName = this.decrypt(currentUser.LastName);
 
-                let bytesLastName = CryptoJS.AES.decrypt(currentUser.LastName, SECRET_KEY);
-                originalLastName = bytesLastName.toString(CryptoJS.enc.Utf8);
-
-                console.log(originalFirstName, originalLastName)
-            } catch (error) {
-                console.error("Decryption error:", error);
-                // Handle decryption error, e.g., set default values or show an error message
-            }
+        
+        
+       
         return (
             <div className="container">
                 {(this.state.userReady) ?
@@ -70,8 +71,12 @@ export default class Profile extends Component {
                             {currentUser.email}
                         </p>
                         <p>
-                            <strong>Full Name:</strong>{" "}
-                            {originalFirstName} {originalLastName}
+                            <strong>First Name :</strong>{" "}
+                            {originalFirstName} 
+                        </p>
+                        <p>
+                        <strong>LastName :</strong>{" "}
+                            {originalLastName} 
                         </p>
                         <p>
                             <strong>Authorities:</strong>
